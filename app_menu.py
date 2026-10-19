@@ -3,8 +3,8 @@ from presentación.menu import cargar_menu
 from presentación.menu import menu_principal
 
 
-
-menu_principal()
+while True:
+    menu_principal()
 
 #cargar_menu()
 
