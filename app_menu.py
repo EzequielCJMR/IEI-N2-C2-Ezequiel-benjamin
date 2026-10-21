@@ -1,11 +1,4 @@
-from auxiliares.datos_app import nombre_app, version_app
-from presentación.menu import cargar_menu
-from presentación.menu import menu_principal
+from presentacion.menu import cargar_menu
 
-
-while True:
-    menu_principal()
-
-#cargar_menu()
-
-
+if __name__ == '__main__':
+    cargar_menu()

@@ -1,85 +1,53 @@
 from datos.modelos.usuario import Usuario
-
+from datos.modelos.Administrador import Administrador
+from datos.modelos.encuestado import Encuestado
 
 def listado_usuarios():
-    usuarios = Usuario.select()
-    print("listado de usuarios")
+    return Usuario.select()
 
-    for user in usuarios:
-        print(user)
-        print(f"ID: {user.id_usuario}, Nombre: {user.nombre}, Email: {user.email}")
+def obtener_usuario_id(id_usuario):
+    return Usuario.get_or_none(Usuario.id_usuario == id_usuario)
 
+def buscar_usuario_email(email):
+    return Usuario.get_or_none(Usuario.email == email)
 
-def ingresar_usuario():
-    nombre = input("Nombre: ").strip()
-    rut = input("RUT: ").strip()
-    email = input("Email: ").strip()
-    contrasena = input("Contraseña: ").strip()
-    rol = input("Rol: ").strip()
+def buscar_usuario_rut(rut):
+    return Usuario.get_or_none(Usuario.rut == rut)
 
-    if Usuario.get_or_none(Usuario.email == email):
-        print("Ya existe ese email.")
-        return
-    if Usuario.get_or_none(Usuario.rut == rut):
-        print("Ya existe ese RUT.")
-        return
-
-    Usuario.create(nombre=nombre, rut=rut, email=email, contrasena=contrasena, rol=rol)
-    print("Guardado.")
-
-
-def modificar_usuario():
-    print("\n--- MODIFICAR USUARIO ---")
-    # Como el ID es autoincremental, pedimos el ID para buscar
+def guardar_usuario(nombre, rut, email, contrasena, rol):
     try:
-        id_usuario = int(input("ID del usuario a modificar: ").strip())
-    except ValueError:
-        print("Error: El ID debe ser un número.")
-        return
+        # Usamos .create() igual que en administrador para que guarde al instante
+        Usuario.create(
+            nombre=nombre, 
+            rut=rut, 
+            email=email, 
+            contrasena=contrasena, 
+            rol=rol
+        )
+        return True
+    except Exception as e:
+        print(f"\n🚨 ERROR DE MYSQL: {e}\n")
+        return False
 
-    user = Usuario.get_or_none(Usuario.id_usuario == id_usuario)
-
-    if not user:
-        print("Error: No existe un usuario con ese ID.")
-        return
-
-    # Pedimos los datos nuevos (si se deja vacío, se mantiene el actual)
-    nombre = input(f"Nuevo Nombre (actual: {user.nombre}): ").strip()
-    email = input(f"Nuevo Email (actual: {user.email}): ").strip()
-    contrasena = input(f"Nueva Contraseña (actual: {user.contrasena}): ").strip()
-    rol = input(f"Nuevo Rol (actual: {user.rol}): ").strip()
-
-    # Actualizamos solo si el usuario escribió algo
-    if nombre:
-        user.nombre = nombre
-    if email:
-        # Validar que el nuevo email no esté ocupado por OTRO usuario
-        if Usuario.get_or_none((Usuario.email == email) & (Usuario.id_usuario != id_usuario)):
-            print("Error: Ese email ya está en uso por otro usuario.")
-            return
-        user.email = email
-    if contrasena:
-        user.contrasena = contrasena
-    if rol:
-        user.rol = rol
-
-    user.save()
-    print("¡Usuario modificado con éxito!")
-
-
-def eliminar_usuario():
-    print("\n--- ELIMINAR USUARIO ---")
+def eliminar_usuario_bd(user: Usuario):
     try:
-        id_usuario = int(input("ID del usuario a eliminar: ").strip())
-    except ValueError:
-        print("Error: El ID debe ser un número.")
-        return
+        # 1. Guardamos el ID del usuario
+        id_usuario = user.id_usuario
+        
+        # 2. Buscamos y borramos si es Administrador
+        admin_asociado = Administrador.get_or_none(Administrador.id_usuario == id_usuario)
+        if admin_asociado:
+            admin_asociado.delete_instance()
+            
+        # 3. Buscamos y borramos si es Encuestado
+        encuestado_asociado = Encuestado.get_or_none(Encuestado.id_usuario == id_usuario)
+        if encuestado_asociado:
+            encuestado_asociado.delete_instance()
 
-    user = Usuario.get_or_none(Usuario.id_usuario == id_usuario)
-
-    if not user:
-        print("Error: No existe un usuario con ese ID.")
-        return
-
-    user.delete_instance()
-    print("¡Usuario eliminado con éxito!")
+        # 4. Finalmente, borramos al Usuario
+        user.delete_instance()
+        
+        return True
+    except Exception as e:
+        print(f"Error al eliminar usuario: {e}")
+        return False
