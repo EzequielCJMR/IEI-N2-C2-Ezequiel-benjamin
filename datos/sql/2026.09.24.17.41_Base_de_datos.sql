@@ -1,3 +1,14 @@
+
+-- 1. Crear el usuario local con tu contraseña
+CREATE USER 'ezequielmr'@'localhost' IDENTIFIED BY 'clave123';
+
+-- 2. Conceder privilegios SOLO para tu base de datos 'encuestapru'
+GRANT ALL PRIVILEGES ON encuestapru.* TO 'ezequielmr'@'localhost';
+
+-- 3. Aplicar los cambios de privilegios
+FLUSH PRIVILEGES;
+
+
 -- 1. TABLA USUARIO
 CREATE TABLE Usuario (
   id_usuario INT AUTO_INCREMENT PRIMARY KEY,
