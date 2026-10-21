@@ -1,3 +1,4 @@
+-- 1. TABLA USUARIO
 CREATE TABLE Usuario (
   id_usuario INT AUTO_INCREMENT PRIMARY KEY,
   rut VARCHAR(20) UNIQUE NOT NULL,
@@ -7,16 +8,18 @@ CREATE TABLE Usuario (
   fecha_registro DATE DEFAULT (CURRENT_DATE),
   activo BOOLEAN DEFAULT TRUE,
   rol ENUM('Administrador', 'Encuestado') NOT NULL
-);
+) ENGINE=InnoDB;
 
+-- 2. TABLA ADMINISTRADOR
 CREATE TABLE Administrador (
-  id_administrador INT PRIMARY KEY,
-  id_usuario,
+  id_administrador INT AUTO_INCREMENT PRIMARY KEY,
+  id_usuario INT NOT NULL,
   cargo VARCHAR(50) NOT NULL,
   fecha_contratacion DATE NOT NULL,
   FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
+-- 3. TABLA ENCUESTADO
 CREATE TABLE Encuestado (
   id_usuario INT PRIMARY KEY,
   fecha_nacimiento DATE NOT NULL,       
@@ -24,14 +27,16 @@ CREATE TABLE Encuestado (
   pais VARCHAR(50) NOT NULL,
   ocupacion VARCHAR(50),
   FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
+-- 4. TABLA CATEGORIA
 CREATE TABLE Categoria (
   id_categoria INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(50) NOT NULL,
   descripcion TEXT
-);
+) ENGINE=InnoDB;
 
+-- 5. TABLA ENCUESTA
 CREATE TABLE Encuesta (
   id_encuesta INT AUTO_INCREMENT PRIMARY KEY,
   titulo VARCHAR(100) NOT NULL,
@@ -41,10 +46,11 @@ CREATE TABLE Encuesta (
   estado VARCHAR(20) DEFAULT 'BORRADOR',
   id_admin INT NOT NULL,
   id_categoria INT,
-  FOREIGN KEY (id_admin) REFERENCES Administrador(id_usuario),
+  FOREIGN KEY (id_admin) REFERENCES Administrador(id_usuario) ON DELETE CASCADE,
   FOREIGN KEY (id_categoria) REFERENCES Categoria(id_categoria) ON DELETE SET NULL
-);
+) ENGINE=InnoDB;
 
+-- 6. TABLA PREGUNTA
 CREATE TABLE Pregunta (
   id_pregunta INT AUTO_INCREMENT PRIMARY KEY,
   texto VARCHAR(255) NOT NULL,
@@ -53,35 +59,38 @@ CREATE TABLE Pregunta (
   tipo ENUM('Abierta', 'Opcion Multiple', 'Seleccion Unica', 'Escala') NOT NULL,
   id_encuesta INT NOT NULL,
   FOREIGN KEY (id_encuesta) REFERENCES Encuesta(id_encuesta) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
+-- 7. PREGUNTAS HIJAS
 CREATE TABLE PreguntaMultiple (
   id_pregunta INT PRIMARY KEY,
   permite_multiple BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (id_pregunta) REFERENCES Pregunta(id_pregunta) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE PreguntaEscala (
   id_pregunta INT PRIMARY KEY,
   escala_min INT NOT NULL,
   escala_max INT NOT NULL,
   FOREIGN KEY (id_pregunta) REFERENCES Pregunta(id_pregunta) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE PreguntaAbierta (
   id_pregunta INT PRIMARY KEY,
   max_caracteres INT NOT NULL,
   FOREIGN KEY (id_pregunta) REFERENCES Pregunta(id_pregunta) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
+-- 8. TABLA OPCION
 CREATE TABLE Opcion (
   id_opcion INT AUTO_INCREMENT PRIMARY KEY,
   texto VARCHAR(255) NOT NULL,
   contador_votos INT DEFAULT 0,
   id_pregunta INT NOT NULL,
   FOREIGN KEY (id_pregunta) REFERENCES Pregunta(id_pregunta) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
+-- 9. PARTICIPACION
 CREATE TABLE ParticipacionEncuesta (
   id_participacion INT AUTO_INCREMENT PRIMARY KEY,
   id_encuestado INT NOT NULL,
@@ -90,8 +99,9 @@ CREATE TABLE ParticipacionEncuesta (
   completada BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (id_encuestado) REFERENCES Encuestado(id_usuario) ON DELETE CASCADE,
   FOREIGN KEY (id_encuesta) REFERENCES Encuesta(id_encuesta) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
+-- 10. RESPUESTA
 CREATE TABLE Respuesta (
   id_respuesta INT AUTO_INCREMENT PRIMARY KEY,
   id_participacion INT NOT NULL,
@@ -100,8 +110,9 @@ CREATE TABLE Respuesta (
   fecha_respuesta DATE DEFAULT (CURRENT_DATE),
   FOREIGN KEY (id_participacion) REFERENCES ParticipacionEncuesta(id_participacion) ON DELETE CASCADE,
   FOREIGN KEY (id_pregunta) REFERENCES Pregunta(id_pregunta) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
+-- 11. REPORTE
 CREATE TABLE Reporte (
   id_reporte INT AUTO_INCREMENT PRIMARY KEY,
   id_encuesta INT NOT NULL,
@@ -109,8 +120,4 @@ CREATE TABLE Reporte (
   total_participantes INT DEFAULT 0,
   total_respuestas INT DEFAULT 0,
   FOREIGN KEY (id_encuesta) REFERENCES Encuesta(id_encuesta) ON DELETE CASCADE
-);
-
-
-
-
+) ENGINE=InnoDB;
