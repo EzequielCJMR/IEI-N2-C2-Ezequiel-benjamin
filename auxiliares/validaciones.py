@@ -52,3 +52,6 @@ def validar_genero(genero):
     else:
         print('Género Inválido, ingrese un número del 1 al 3...')
         return ''
+    
+
+    #hola
