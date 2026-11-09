@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Administrador</title>
+    <style>
+        body { font-family: Arial; background-color: #2c3e50; color: white; text-align: center; padding-top: 50px; }
+        h1 { color: #3498db; }
+        .menu { background: #34495e; padding: 20px; border-radius: 10px; display: inline-block; }
+        button { padding: 10px 20px; margin: 10px; cursor: pointer; border: none; border-radius: 5px; background: #e67e22; color: white; width: 200px; display: block; }
+        .logout { display: inline-block; margin-top: 20px; color: #e74c3c; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Panel de Administración</h1>
+    <p>Bienvenido/a, <strong>{{ nombre }}</strong></p>
+    <div class="menu">
+        <h3>Opciones disponibles</h3>
+        <button>Gestionar Usuarios</button>
+        <button>Gestionar Encuestas</button>
+        <button>Ver Reportes</button>
+    </div>
+    <br>
+    <a href="/logout" class="logout">Cerrar Sesión</a>
+</body>
+</html>
