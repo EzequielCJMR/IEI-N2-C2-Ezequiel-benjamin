@@ -52,4 +52,39 @@ def validar_genero(genero):
     else:
         print('Género Inválido, ingrese un número del 1 al 3...')
         return ''
-    
+
+def validar_rut(rut):
+    # 1. Validar el formato primero
+    patron_rut = r'^\d{1,3}(?:\.\d{1,3}){2}-[0-9kK]$'
+    if not re.match(patron_rut, rut):
+        print('RUT Inválido: Debe tener el formato 11.111.111-1')
+        return ''
+
+    # 2. Calcular el Dígito Verificador (Módulo 11)
+    rut_limpio = rut.replace(".", "").replace("-", "")
+    cuerpo = rut_limpio[:-1]
+    dv_ingresado = rut_limpio[-1].upper()
+
+    suma = 0
+    multiplicador = 2
+    for digito in reversed(cuerpo):
+        suma += int(digito) * multiplicador
+        multiplicador += 1
+        if multiplicador == 8:
+            multiplicador = 2
+
+    resto = suma % 11
+    dv_calculado = 11 - resto
+
+    if dv_calculado == 11:
+        dv_calculado = '0'
+    elif dv_calculado == 10:
+        dv_calculado = 'K'
+    else:
+        dv_calculado = str(dv_calculado)
+
+    if dv_calculado == dv_ingresado:
+        return rut
+    else:
+        print('RUT Inválido: El dígito verificador no coincide.')
+        return ''

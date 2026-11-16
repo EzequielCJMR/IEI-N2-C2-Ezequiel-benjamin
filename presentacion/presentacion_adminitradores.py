@@ -7,7 +7,8 @@ from datos.repositorio.repo_administrador import (
     eliminar_administrador_bd
 )
 from negocio.negocio_administrador import crear_administrador_completo 
-from auxiliares.validaciones import validar_contrasena, validar_correo
+# ¡AGREGADO validar_rut AQUÍ!
+from auxiliares.validaciones import validar_contrasena, validar_correo, validar_rut
 
 def mostrar_listado_administradores():
     administradores = listado_administradores()
@@ -19,7 +20,12 @@ def mostrar_listado_administradores():
 def ingresar_administrador():
     print("\n--- INGRESAR ADMINISTRADOR (Nuevo Usuario) ---")
     
-    rut = input("RUT: ").strip()
+    # ¡NUEVO BUCLE DE VALIDACIÓN DE RUT!
+    rut = ''
+    while rut == '':
+        rut = input("RUT (ej: 11.111.111-1): ").strip()
+        rut = validar_rut(rut)
+
     nombre = input("Nombre: ").strip()
     
     # Validar correo
@@ -99,8 +105,8 @@ def modificar_administrador():
         print(f"🚨 Error al modificar: {e}")
 
 def eliminar_administrador():
-    print("\n--- ELIMINAR ADMINISTRADOR ---")
-    id_usuario = input("ID del administrador a eliminar: ").strip()
+    print("\n--- DESACTIVAR ADMINISTRADOR ---")
+    id_usuario = input("ID del administrador a desactivar: ").strip()
     admin = obtener_administrador_id(id_usuario)
     
     if not admin:

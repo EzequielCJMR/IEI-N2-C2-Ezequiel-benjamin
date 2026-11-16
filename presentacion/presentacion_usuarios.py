@@ -6,7 +6,7 @@ from negocio.negocio_usuarios import (
     modificar_objeto_usuario
 )
 from datos.repositorio.repo_usuarios import obtener_usuario_id, eliminar_usuario_bd
-from auxiliares.validaciones import validar_contrasena, validar_correo
+from auxiliares.validaciones import validar_contrasena, validar_correo, validar_rut
 
 def mostrar_listado_usuarios():
     print("\n--- LISTADO DE USUARIOS ---")
@@ -23,14 +23,23 @@ def mostrar_listado_usuarios():
 def ingresar_usuario():
     print("\n--- INGRESAR USUARIO ---")
     nombre = input("Nombre: ").strip()
-    rut = input("RUT: ").strip()
+    
+    rut = ''
+    while rut == '':
+        rut = input("RUT (ej: 11.111.111-1): ").strip()
+        rut = validar_rut(rut)
     
     email = ''
     while email == '':
         email = input("Email: ").strip()
         email = validar_correo(email)
 
-    rol = input("Rol (Administrador/Encuestado): ").strip()
+    # VALIDACIÓN DEL ROL
+    rol = ''
+    while rol not in ['Administrador', 'Encuestado']:
+        rol = input("Rol (Administrador/Encuestado): ").strip().capitalize()
+        if rol not in ['Administrador', 'Encuestado']:
+            print("❌ Error: El rol debe ser exactamente 'Administrador' o 'Encuestado'.")
 
     contrasena = ''
     while contrasena == '':
@@ -80,15 +89,21 @@ def modificar_usuario():
     else:
         contrasena_nueva = user.contrasena 
 
-    rol = input(f"Nuevo Rol (actual: {user.rol}): ").strip()
+    # VALIDACIÓN DEL ROL AL MODIFICAR
+    rol = input(f"Nuevo Rol (actual: {user.rol}) [Dejar vacío para conservar]: ").strip().capitalize()
+    if not rol:
+        rol = user.rol
+    elif rol not in ['Administrador', 'Encuestado']:
+        print("❌ Rol inválido. Se mantendrá el rol actual.")
+        rol = user.rol
 
     if modificar_objeto_usuario(user, nombre, email, contrasena_nueva, rol):
         print("¡Usuario modificado con éxito!")
 
 def eliminar_usuario():
-    print("\n--- ELIMINAR USUARIO ---")
+    print("\n--- DESACTIVAR USUARIO ---")
     try:
-        id_usuario = int(input("ID del usuario a eliminar: ").strip())
+        id_usuario = int(input("ID del usuario a desactivar: ").strip())
     except ValueError:
         print("Error: El ID debe ser un número.")
         return
@@ -99,4 +114,4 @@ def eliminar_usuario():
         return
 
     if eliminar_usuario_bd(user):
-        print("¡Usuario eliminado con éxito!")
+        print("¡Usuario desactivado con éxito!")

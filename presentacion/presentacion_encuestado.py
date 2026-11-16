@@ -8,7 +8,8 @@ from negocio.negocio_encuestado import (
     modificar_encuestado_completo
 )
 from datos.repositorio.repo_encuestado import obtener_encuestado_id, eliminar_encuestado_bd
-from auxiliares.validaciones import validar_contrasena, validar_correo
+# ¡AGREGADO validar_rut AQUÍ!
+from auxiliares.validaciones import validar_contrasena, validar_correo, validar_rut
 
 def mostrar_listado_encuestados():
     encuestados = procesar_listado_encuestados()
@@ -26,7 +27,12 @@ def mostrar_listado_encuestados():
 def ingresar_encuestado():
     print("\n--- INGRESAR ENCUESTADO (Nuevo Usuario) ---")
     
-    rut = input("RUT: ").strip()
+    # ¡NUEVO BUCLE DE VALIDACIÓN DE RUT!
+    rut = ''
+    while rut == '':
+        rut = input("RUT (ej: 11.111.111-1): ").strip()
+        rut = validar_rut(rut)
+
     nombre = input("Nombre: ").strip()
     
     # Validar correo
@@ -127,8 +133,8 @@ def modificar_encuestado():
         print("❌ No se pudo modificar.")
 
 def eliminar_encuestado():
-    print("\n--- ELIMINAR ENCUESTADO ---")
-    id_usuario = input("ID del encuestado a eliminar: ").strip()
+    print("\n--- DESACTIVAR ENCUESTADO ---")
+    id_usuario = input("ID del encuestado a desactivar: ").strip()
     
     encuestado = obtener_encuestado_id(id_usuario)
     if not encuestado:
