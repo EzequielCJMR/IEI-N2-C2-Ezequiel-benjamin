@@ -1,24 +1,30 @@
 from datos.modelos.Administrador import Administrador
 from datos.modelos.usuario import Usuario  # <-- NUEVA IMPORTACIÓN
 from datos.repositorio.repo_administrador import guardar_administrador, listado_administradores
+from datos.modelos.base import database
 
 def procesar_listado_administradores():
     return listado_administradores()
 
 def crear_administrador_completo(rut, nombre, email, contrasena, cargo, fecha_obj):
     try:
-        # 1. Creamos el Usuario
-        nuevo_usuario = Usuario.create(
-            rut=rut, nombre=nombre, email=email, 
-            contrasena=contrasena, rol='Administrador'
-        )
-        
-        # 2. Creamos el Administrador SIN el id_administrador (MySQL lo genera solo)
-        Administrador.create(
-            id_usuario=nuevo_usuario.id_usuario,
-            cargo=cargo,
-            fecha_contratacion=fecha_obj
-        )
+        if Usuario.get_or_none(Usuario.email == email):
+            print("Error: El email ya está registrado.")
+            return False
+        if Usuario.get_or_none(Usuario.rut == rut):
+            print("Error: El RUT ya está registrado.")
+            return False
+
+        with database.atomic():
+            nuevo_usuario = Usuario.create(
+                rut=rut, nombre=nombre, email=email,
+                contrasena=contrasena, rol='Administrador'
+            )
+            Administrador.create(
+                id_usuario=nuevo_usuario.id_usuario,
+                cargo=cargo,
+                fecha_contratacion=fecha_obj
+            )
         return True
     except Exception as e:
         print(f"🚨 Error al crear: {e}")

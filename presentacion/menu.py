@@ -3,7 +3,9 @@ from auxiliares import (
     titulo_principal, diccionario_menu_principal,
     menu_administrador, diccionario_menu_administrador,
     menu_usuario, diccionario_menu_usuario,
-    menu_encuestado, diccionario_menu_encuestado
+    menu_encuestado, diccionario_menu_encuestado,
+    menu_categoria, diccionario_menu_categoria,
+    menu_encuesta, diccionario_menu_encuesta
 )
 
 # Importamos tus CRUDs
@@ -19,7 +21,18 @@ from presentacion.presentacion_encuestado import (
     mostrar_listado_encuestados, ingresar_encuestado, 
     modificar_encuestado, eliminar_encuestado
 )
+from presentacion.presentacion_categoria import (
+    mostrar_listado_categorias, ingresar_categoria,
+    modificar_categoria_presentacion, eliminar_categoria_presentacion
+)
+from presentacion.presentacion_encuesta import (
+    mostrar_listado_encuestas, ingresar_encuesta,
+    modificar_encuesta_presentacion, eliminar_encuesta_presentacion
+)
 from datos.conexion import conectar
+
+
+
 
 def mostrar_menu(titulo, opciones):
     print("\n" + "=" * 40)
@@ -71,6 +84,32 @@ def cargar_menu_encuestado():
             case '0': break
             case _: print('Opción no válida.')
 
+def cargar_menu_categoria():
+    while True:
+        mostrar_menu(menu_categoria, diccionario_menu_categoria)
+        opcion = input('Seleccione su opción: ').strip()
+        print()
+        match opcion:
+            case '1': mostrar_listado_categorias()
+            case '2': ingresar_categoria()
+            case '3': modificar_categoria_presentacion()
+            case '4': eliminar_categoria_presentacion()
+            case '0': break
+            case _: print('Opción no válida.')
+
+def cargar_menu_encuesta():
+    while True:
+        mostrar_menu(menu_encuesta, diccionario_menu_encuesta)
+        opcion = input('Seleccione su opción: ').strip()
+        print()
+        match opcion:
+            case '1': mostrar_listado_encuestas()
+            case '2': ingresar_encuesta()
+            case '3': modificar_encuesta_presentacion()
+            case '4': eliminar_encuesta_presentacion()
+            case '0': break
+            case _: print('Opción no válida.')
+
 # --- MENÚ PRINCIPAL ---
 
 def cargar_menu():
@@ -86,6 +125,10 @@ def cargar_menu():
                 cargar_menu_usuario()
             case '3':
                 cargar_menu_encuestado()
+            case '4':
+                cargar_menu_categoria()
+            case '5':
+                cargar_menu_encuesta()
             case '0':
                 print('Saliendo del programa...')
                 db = conectar()

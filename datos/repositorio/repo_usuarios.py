@@ -1,3 +1,4 @@
+import bcrypt
 from datos.modelos.usuario import Usuario
 
 def listado_usuarios():
@@ -16,6 +17,19 @@ def buscar_usuario_email(email):
 
 def buscar_usuario_rut(rut):
     return Usuario.get_or_none(Usuario.rut == rut)
+
+def verificar_usuario(email, contrasena):
+    usuario = buscar_usuario_email(email)
+    if not usuario or not usuario.activo:
+        return None
+
+    try:
+        if bcrypt.checkpw(contrasena.encode("utf-8"), usuario.contrasena.encode("utf-8")):
+            return usuario
+    except (ValueError, AttributeError):
+        return None
+
+    return None
 
 def guardar_usuario(nombre, rut, email, contrasena, rol):
     try:

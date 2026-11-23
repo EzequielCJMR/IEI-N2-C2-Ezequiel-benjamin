@@ -1,4 +1,5 @@
 import bcrypt
+import maskpass  # <-- IMPORTAMOS MASKPASS
 from datetime import datetime, date
 from datos.modelos.encuestado import Encuestado
 from datos.modelos.usuario import Usuario
@@ -8,7 +9,6 @@ from negocio.negocio_encuestado import (
     modificar_encuestado_completo
 )
 from datos.repositorio.repo_encuestado import obtener_encuestado_id, eliminar_encuestado_bd
-# ¡AGREGADO validar_rut AQUÍ!
 from auxiliares.validaciones import validar_contrasena, validar_correo, validar_rut
 
 def mostrar_listado_encuestados():
@@ -27,7 +27,6 @@ def mostrar_listado_encuestados():
 def ingresar_encuestado():
     print("\n--- INGRESAR ENCUESTADO (Nuevo Usuario) ---")
     
-    # ¡NUEVO BUCLE DE VALIDACIÓN DE RUT!
     rut = ''
     while rut == '':
         rut = input("RUT (ej: 11.111.111-1): ").strip()
@@ -35,17 +34,18 @@ def ingresar_encuestado():
 
     nombre = input("Nombre: ").strip()
     
-    # Validar correo
     email = ''
     while email == '':
         email = input("Email: ").strip()
         email = validar_correo(email)
         
-    # Validar y encriptar contraseña
     contrasena = ''
     while contrasena == '':
         print("\nRequisitos Contraseña: 8-15 caracteres, 1 mayúscula, 1 minúscula, 1 número, 1 símbolo (!@#$%&/)")
-        contrasena = input("Contraseña: ").strip()
+        
+        # ¡AQUÍ USAMOS MASKPASS!
+        contrasena = maskpass.askpass(prompt="Contraseña: ", mask="*") 
+        
         resultado = validar_contrasena(contrasena)
         
         if len(resultado) > 0:
@@ -64,12 +64,9 @@ def ingresar_encuestado():
     
     try:
         fecha_obj = datetime.strptime(fecha_str, "%Y-%m-%d").date()
-        
-        # VALIDACIÓN NUEVA: La fecha de nacimiento no puede ser futura
         if fecha_obj > date.today():
             print("Error: La fecha de nacimiento no puede ser en el futuro.")
             return
-            
     except ValueError:
         print("Error: Formato de fecha incorrecto. Usa YYYY-MM-DD.")
         return
@@ -96,8 +93,10 @@ def modificar_encuestado():
     nuevo_nombre = input(f"Nuevo Nombre (actual: {usuario.nombre}): ").strip()
     nuevo_email = input(f"Nuevo Email (actual: {usuario.email}): ").strip()
     
-    # Modificar contraseña con validación y encriptación
-    nueva_contrasena = input("Nueva Contraseña (dejar vacío para no cambiar): ").strip()
+    print("Nueva Contraseña (dejar vacío para no cambiar):")
+    # ¡AQUÍ USAMOS MASKPASS!
+    nueva_contrasena = maskpass.askpass(prompt="Contraseña: ", mask="*")
+    
     if nueva_contrasena:
         resultado = validar_contrasena(nueva_contrasena)
         if len(resultado) > 0:
@@ -107,19 +106,16 @@ def modificar_encuestado():
             hash_bytes = bcrypt.hashpw(nueva_contrasena.encode('utf-8'), bcrypt.gensalt())
             nueva_contrasena = hash_bytes.decode('utf-8')
     else:
-        nueva_contrasena = usuario.contrasena # Mantiene la que ya tenía
+        nueva_contrasena = usuario.contrasena
     
     fecha_str = input(f"Nueva Fecha Nacimiento (actual: {encuestado.fecha_nacimiento}): ").strip()
     fecha_obj = None
     if fecha_str:
         try:
             fecha_obj = datetime.strptime(fecha_str, "%Y-%m-%d").date()
-            
-            # VALIDACIÓN NUEVA: La fecha no puede ser futura
             if fecha_obj > date.today():
                 print("Error: La fecha de nacimiento no puede ser en el futuro. No se actualizará.")
                 fecha_obj = None
-                
         except ValueError:
             print("Error: Formato de fecha incorrecto. No se actualizará la fecha.")
 

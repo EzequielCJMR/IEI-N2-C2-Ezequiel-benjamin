@@ -1,4 +1,5 @@
 import bcrypt
+import maskpass  
 from datos.modelos.usuario import Usuario
 from negocio.negocio_usuarios import (
     procesar_listado_usuarios, 
@@ -45,8 +46,11 @@ def ingresar_usuario():
     while contrasena == '':
         print("\nRequisitos Contraseña:")
         print("- Entre 8 y 15 caracteres\n- Al menos una mayúscula\n- Al menos una minúscula\n- Al menos un número\n- Al menos un símbolo: !@#$%&/")
-        contrasena = input("Contraseña: ").strip()
         
+        # ¡AQUÍ USAMOS MASKPASS!
+        contrasena = maskpass.askpass(prompt="Contraseña: ", mask="*") 
+        
+        # Validamos (maskpass devuelve texto, así que no hay problema)
         resultado = validar_contrasena(contrasena)
         
         if len(resultado) > 0:
@@ -77,7 +81,10 @@ def modificar_usuario():
     nombre = input(f"Nuevo Nombre (actual: {user.nombre}): ").strip()
     email = input(f"Nuevo Email (actual: {user.email}): ").strip()
     
-    contrasena_nueva = input(f"Nueva Contraseña (dejar vacío para no cambiar): ").strip()
+    print(f"Nueva Contraseña (dejar vacío para no cambiar):")
+    # ¡AQUÍ TAMBIÉN USAMOS MASKPASS!
+    contrasena_nueva = maskpass.askpass(prompt="Contraseña: ", mask="*")
+    
     if contrasena_nueva:
         resultado = validar_contrasena(contrasena_nueva)
         if len(resultado) > 0:

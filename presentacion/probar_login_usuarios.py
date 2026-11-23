@@ -3,9 +3,11 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
+import bcrypt
 import tkinter as tk
 from tkinter import messagebox
 from datos.modelos.usuario import Usuario
+from datos.repositorio.repo_usuarios import verificar_usuario
 
 
 def intentar_login():
@@ -13,7 +15,7 @@ def intentar_login():
     password = entry_pass.get().strip()
 
     # Buscamos en la base de datos
-    usuario = Usuario.get_or_none((Usuario.email == email) & (Usuario.contrasena == password))
+    usuario = verificar_usuario(email, password)
 
     if usuario:
         if usuario.activo: # Verificamos que no esté desactivado

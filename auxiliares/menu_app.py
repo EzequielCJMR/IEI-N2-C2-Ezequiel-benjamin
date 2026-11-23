@@ -3,6 +3,8 @@ diccionario_menu_principal = {
     '1': 'Gestión de Administradores',
     '2': 'Gestión de Usuarios',
     '3': 'Gestión de Encuestados',
+    '4': 'Gestión de Categorías',
+    '5': 'Gestión de Encuestas',
     '0': 'Salir\n'
 }
 
@@ -30,5 +32,23 @@ diccionario_menu_encuestado = {
     '2': 'Registrar Encuestado',
     '3': 'Modificar Encuestado',
     '4': 'Eliminar Encuestado',
+    '0': 'Volver a Menú Principal\n'
+}
+
+menu_categoria = 'Menú Gestión de Categorías'
+diccionario_menu_categoria = {
+    '1': 'Listar Categorías',
+    '2': 'Registrar Categoría',
+    '3': 'Modificar Categoría',
+    '4': 'Eliminar Categoría',
+    '0': 'Volver a Menú Principal\n'
+}
+
+menu_encuesta = 'Menú Gestión de Encuestas'
+diccionario_menu_encuesta = {
+    '1': 'Listar Encuestas',
+    '2': 'Registrar Encuesta',
+    '3': 'Modificar Encuesta',
+    '4': 'Eliminar Encuesta',
     '0': 'Volver a Menú Principal\n'
 }

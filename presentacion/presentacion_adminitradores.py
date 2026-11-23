@@ -1,4 +1,5 @@
 import bcrypt
+import maskpass  
 from datetime import datetime, date
 from datos.modelos.Administrador import Administrador
 from datos.repositorio.repo_administrador import (
@@ -7,7 +8,6 @@ from datos.repositorio.repo_administrador import (
     eliminar_administrador_bd
 )
 from negocio.negocio_administrador import crear_administrador_completo 
-# ¡AGREGADO validar_rut AQUÍ!
 from auxiliares.validaciones import validar_contrasena, validar_correo, validar_rut
 
 def mostrar_listado_administradores():
@@ -20,7 +20,6 @@ def mostrar_listado_administradores():
 def ingresar_administrador():
     print("\n--- INGRESAR ADMINISTRADOR (Nuevo Usuario) ---")
     
-    # ¡NUEVO BUCLE DE VALIDACIÓN DE RUT!
     rut = ''
     while rut == '':
         rut = input("RUT (ej: 11.111.111-1): ").strip()
@@ -28,17 +27,18 @@ def ingresar_administrador():
 
     nombre = input("Nombre: ").strip()
     
-    # Validar correo
     email = ''
     while email == '':
         email = input("Email: ").strip()
         email = validar_correo(email)
         
-    # Validar y encriptar contraseña
     contrasena = ''
     while contrasena == '':
         print("\nRequisitos Contraseña: 8-15 caracteres, 1 mayúscula, 1 minúscula, 1 número, 1 símbolo (!@#$%&/)")
-        contrasena = input("Contraseña: ").strip()
+        
+        # ¡AQUÍ USAMOS MASKPASS!
+        contrasena = maskpass.askpass(prompt="Contraseña: ", mask="*")
+        
         resultado = validar_contrasena(contrasena)
         
         if len(resultado) > 0:
@@ -56,7 +56,6 @@ def ingresar_administrador():
     try:
         fecha_obj = datetime.strptime(fecha_str, "%Y-%m-%d").date()
         
-        # VALIDACIÓN NUEVA: Que la fecha no sea del futuro
         if fecha_obj > date.today():
             print("Error: La fecha de contratación no puede ser una fecha futura.")
             return
@@ -64,6 +63,7 @@ def ingresar_administrador():
     except ValueError:
         print("Error: Formato de fecha incorrecto. Usa YYYY-MM-DD.")
         return
+
 
     if crear_administrador_completo(rut, nombre, email, contrasena, cargo, fecha_obj):
         print("¡Administrador y Usuario guardados con éxito!")
@@ -89,7 +89,6 @@ def modificar_administrador():
         try:
             fecha_obj = datetime.strptime(fecha_str, "%Y-%m-%d").date()
             
-            # VALIDACIÓN NUEVA: Que la fecha no sea del futuro
             if fecha_obj > date.today():
                 print("Error: La fecha no puede ser futura. No se actualizará.")
             else:

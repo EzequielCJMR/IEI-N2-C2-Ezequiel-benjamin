@@ -1,5 +1,6 @@
 from datos.modelos.encuestado import Encuestado
 from datos.modelos.usuario import Usuario
+from datos.modelos.base import database
 from datos.repositorio.repo_encuestado import listado_encuestados
 
 def procesar_listado_encuestados():
@@ -14,20 +15,18 @@ def crear_encuestado_completo(rut, nombre, email, contrasena, fecha_nac_obj, gen
             print("Error: El RUT ya está registrado.")
             return False
 
-        # 1. Creamos el Usuario
-        nuevo_usuario = Usuario.create(
-            rut=rut, nombre=nombre, email=email, 
-            contrasena=contrasena, rol='Encuestado'
-        )
-        
-        # 2. Creamos al Encuestado
-        Encuestado.create(
-            id_usuario=nuevo_usuario.id_usuario,
-            fecha_nacimiento=fecha_nac_obj,
-            genero=genero,
-            ocupacion=ocupacion,
-            pais=pais
-        )
+        with database.atomic():
+            nuevo_usuario = Usuario.create(
+                rut=rut, nombre=nombre, email=email,
+                contrasena=contrasena, rol='Encuestado'
+            )
+            Encuestado.create(
+                id_usuario=nuevo_usuario.id_usuario,
+                fecha_nacimiento=fecha_nac_obj,
+                genero=genero,
+                ocupacion=ocupacion,
+                pais=pais
+            )
         return True
     except Exception as e:
         print(f"🚨 Error al crear: {e}")
