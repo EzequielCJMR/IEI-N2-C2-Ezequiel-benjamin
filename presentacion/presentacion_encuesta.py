@@ -1,14 +1,14 @@
 from datetime import datetime
 
-from datos.repositorio.repo_encuesta import obtener_encuesta_id
-from datos.repositorio.repo_administrador import listado_administradores
-from datos.repositorio.repo_categoria import listado_categorias
 from negocio.negocio_encuesta import (
     procesar_listado_encuestas,
     crear_encuesta,
     modificar_encuesta,
     eliminar_encuesta,
+    obtener_encuesta_por_id,
 )
+from negocio.negocio_administrador import procesar_listado_administradores
+from negocio.negocio_categoria import procesar_listado_categorias
 
 
 def _leer_fecha(texto):
@@ -47,7 +47,7 @@ def ingresar_encuesta():
 
     estado = input("Estado (BORRADOR/PUBLICADA/CERRADA): ").strip().upper()
 
-    administradores = listado_administradores()
+    administradores = procesar_listado_administradores()
     if not administradores:
         print("No hay administradores registrados.")
         return
@@ -63,7 +63,7 @@ def ingresar_encuesta():
         print("Error: El ID debe ser numérico.")
         return
 
-    categorias = listado_categorias()
+    categorias = procesar_listado_categorias()
     if categorias:
         print("Categorías:")
         for categoria in categorias:
@@ -93,7 +93,7 @@ def modificar_encuesta_presentacion():
         print("Error: El ID debe ser numérico.")
         return
 
-    encuesta = obtener_encuesta_id(id_encuesta)
+    encuesta = obtener_encuesta_por_id(id_encuesta)
     if not encuesta:
         print("No existe una encuesta con ese ID.")
         return
@@ -137,7 +137,7 @@ def eliminar_encuesta_presentacion():
         print("Error: El ID debe ser numérico.")
         return
 
-    encuesta = obtener_encuesta_id(id_encuesta)
+    encuesta = obtener_encuesta_por_id(id_encuesta)
     if not encuesta:
         print("No existe una encuesta con ese ID.")
         return

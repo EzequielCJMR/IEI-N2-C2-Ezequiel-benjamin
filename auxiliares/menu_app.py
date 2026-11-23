@@ -52,3 +52,10 @@ diccionario_menu_encuesta = {
     '4': 'Eliminar Encuesta',
     '0': 'Volver a Menú Principal\n'
 }
+
+menu_encuestado_sesion = 'Menú de Encuestado'
+diccionario_menu_encuestado_sesion = {
+    '1': 'Ver mi perfil',
+    '2': 'Ver encuestas publicadas',
+    '0': 'Cerrar sesión\n'
+}

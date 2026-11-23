@@ -45,6 +45,22 @@ def guardar_usuario(nombre, rut, email, contrasena, rol):
         print(f"\n🚨 ERROR DE MYSQL: {e}\n")
         return False
 
+def modificar_usuario_bd(user: Usuario, nombre=None, email=None, contrasena=None, rol=None):
+    try:
+        if nombre:
+            user.nombre = nombre
+        if email:
+            user.email = email
+        if contrasena:
+            user.contrasena = contrasena
+        if rol:
+            user.rol = rol
+        user.save()
+        return True
+    except Exception as error:
+        print(f"Error al modificar usuario: {error}")
+        return False
+
 def eliminar_usuario_bd(user: Usuario):
     try:
         # En lugar de borrar al usuario y sus dependencias, solo lo desactivamos

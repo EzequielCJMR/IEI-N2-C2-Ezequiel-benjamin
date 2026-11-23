@@ -1,7 +1,12 @@
 from datos.modelos.encuestado import Encuestado
 from datos.modelos.usuario import Usuario
 from datos.modelos.base import database
-from datos.repositorio.repo_encuestado import listado_encuestados
+from datos.repositorio.repo_encuestado import (
+    listado_encuestados,
+    obtener_encuestado_id,
+    modificar_encuestado_bd,
+    eliminar_encuestado_bd,
+)
 
 def procesar_listado_encuestados():
     return listado_encuestados()
@@ -56,8 +61,19 @@ def modificar_encuestado_completo(encuestado, nuevo_nombre, nuevo_email, nueva_c
         if nuevo_pais:
             encuestado.pais = nuevo_pais
             
-        encuestado.save()
-        return True
+        return modificar_encuestado_bd(
+            encuestado,
+            nueva_fecha_obj,
+            nuevo_genero,
+            nueva_ocupacion,
+            nuevo_pais,
+        )
     except Exception as e:
         print(f"🚨 Error al modificar: {e}")
         return False
+
+def obtener_encuestado_por_id(id_usuario):
+    return obtener_encuestado_id(id_usuario)
+
+def desactivar_encuestado(encuestado: Encuestado):
+    return eliminar_encuestado_bd(encuestado)

@@ -1,6 +1,12 @@
 from datos.modelos.Administrador import Administrador
 from datos.modelos.usuario import Usuario  # <-- NUEVA IMPORTACIÓN
-from datos.repositorio.repo_administrador import guardar_administrador, listado_administradores
+from datos.repositorio.repo_administrador import (
+    guardar_administrador,
+    listado_administradores,
+    obtener_administrador_id,
+    modificar_administrador_bd,
+    eliminar_administrador_bd,
+)
 from datos.modelos.base import database
 
 def procesar_listado_administradores():
@@ -43,8 +49,13 @@ def modificar_objeto_administrador(admin: Administrador, nuevo_cargo, nueva_fech
             admin.cargo = nuevo_cargo
         if nueva_fecha_obj:
             admin.fecha_contratacion = nueva_fecha_obj
-        admin.save()
-        return True
+        return modificar_administrador_bd(admin, nuevo_cargo, nueva_fecha_obj)
     except Exception as e:
         print(f"Error al modificar objeto: {e}")
         return False
+
+def obtener_administrador_por_id(id_usuario):
+    return obtener_administrador_id(id_usuario)
+
+def desactivar_administrador(admin: Administrador):
+    return eliminar_administrador_bd(admin)

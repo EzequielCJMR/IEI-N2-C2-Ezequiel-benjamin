@@ -1,17 +1,17 @@
 import bcrypt
 from getpass import getpass
 from datetime import datetime, date
-from datos.modelos.Administrador import Administrador
-from datos.repositorio.repo_administrador import (
-    listado_administradores, 
-    obtener_administrador_id, 
-    eliminar_administrador_bd
+from negocio.negocio_administrador import (
+    crear_administrador_completo,
+    procesar_listado_administradores,
+    obtener_administrador_por_id,
+    modificar_objeto_administrador,
+    desactivar_administrador,
 )
-from negocio.negocio_administrador import crear_administrador_completo 
 from auxiliares.validaciones import validar_contrasena, validar_correo, validar_rut
 
 def mostrar_listado_administradores():
-    administradores = listado_administradores()
+    administradores = procesar_listado_administradores()
     print("\n--- LISTADO DE ADMINISTRADORES ---")
     for admin in administradores:
         print(f"ID Usuario: {admin.id_usuario} | Cargo: {admin.cargo} | Fecha: {admin.fecha_contratacion}")
@@ -74,7 +74,7 @@ def ingresar_administrador():
 def modificar_administrador():
     print("\n--- MODIFICAR ADMINISTRADOR ---")
     id_usuario = input("ID del administrador a modificar: ").strip()
-    admin = obtener_administrador_id(id_usuario)
+    admin = obtener_administrador_por_id(id_usuario)
     
     if not admin:
         print("Error: No existe el administrador.")
@@ -82,6 +82,7 @@ def modificar_administrador():
 
     cargo = input(f"Nuevo Cargo (actual: {admin.cargo}): ").strip()
     fecha_str = input(f"Nueva Fecha (actual: {admin.fecha_contratacion}): ").strip()
+    nueva_fecha = None
 
     if cargo:
         admin.cargo = cargo
@@ -93,25 +94,26 @@ def modificar_administrador():
             if fecha_obj > date.today():
                 print("Error: La fecha no puede ser futura. No se actualizará.")
             else:
-                admin.fecha_contratacion = fecha_obj
+                nueva_fecha = fecha_obj
                 
         except ValueError:
             print("Error: Formato de fecha incorrecto. No se actualizará la fecha.")
 
-    try:
-        admin.save()
+    if modificar_objeto_administrador(
+        admin,
+        cargo if cargo else None,
+        nueva_fecha,
+    ):
         print("¡Administrador modificado con éxito!")
-    except Exception as e:
-        print(f"🚨 Error al modificar: {e}")
 
 def eliminar_administrador():
     print("\n--- DESACTIVAR ADMINISTRADOR ---")
     id_usuario = input("ID del administrador a desactivar: ").strip()
-    admin = obtener_administrador_id(id_usuario)
+    admin = obtener_administrador_por_id(id_usuario)
     
     if not admin:
         print("Error: No existe el administrador.")
         return
 
-    if eliminar_administrador_bd(admin):
+    if desactivar_administrador(admin):
         print("¡Administrador desactivado con éxito!")

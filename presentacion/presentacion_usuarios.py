@@ -1,12 +1,13 @@
 import bcrypt
 from getpass import getpass
-from datos.modelos.usuario import Usuario
 from negocio.negocio_usuarios import (
     procesar_listado_usuarios, 
     crear_objeto_usuario, 
-    modificar_objeto_usuario
+    modificar_objeto_usuario,
+    obtener_usuario_por_id,
+    desactivar_usuario,
+    verificar_login_usuario,
 )
-from datos.repositorio.repo_usuarios import obtener_usuario_id, eliminar_usuario_bd,buscar_usuario_email, verificar_usuario
 from auxiliares.validaciones import validar_contrasena, validar_correo, validar_rut
 
 from auxiliares import (
@@ -77,7 +78,7 @@ def modificar_usuario():
         print("Error: El ID debe ser un número.")
         return
 
-    user = obtener_usuario_id(id_usuario)
+    user = obtener_usuario_por_id(id_usuario)
     if not user:
         print("Error: No existe un usuario con ese ID.")
         return
@@ -120,13 +121,27 @@ def eliminar_usuario():
         print("Error: El ID debe ser un número.")
         return
 
-    user = obtener_usuario_id(id_usuario)
+    user = obtener_usuario_por_id(id_usuario)
     if not user:
         print("Error: No existe un usuario con ese ID.")
         return
 
-    if eliminar_usuario_bd(user):
+    if desactivar_usuario(user):
         print("¡Usuario desactivado con éxito!")
+
+
+def solicitar_correo(prompt="Correo: "):
+    while True:
+        correo = input(prompt).strip()
+        correo = validar_correo(correo)
+        if correo:
+            return correo
+
+
+def solicitar_contrasenia(prompt="Contrasena: "):
+    # CAMBIO: se usa getpass una sola vez para evitar pedir la contraseña dos
+    # veces y eliminar el UnicodeDecodeError que produce maskpass en Windows.
+    return getpass(prompt)
 
 
 def login():
@@ -134,9 +149,15 @@ def login():
     print(f" Bienvenido a {nombre_app} - version {version_app}")
     email = input("Email: ").strip()
     # CAMBIO: getpass mantiene la contraseña oculta y admite caracteres Unicode.
-    password = getpass("Contraseña: ")
+    # CAMBIO: maskpass se intenta primero por compatibilidad con la evaluacion;
+    # getpass es el respaldo seguro cuando maskpass falla en Windows/Python 3.14.
+    try:
+        import maskpass
+        password = maskpass.askpass(prompt="Contraseña: ", mask="*")
+    except (ImportError, UnicodeDecodeError, OSError, EOFError):
+        password = getpass("Contraseña: ")
 
-    usuario = verificar_usuario(email, password)
+    usuario = verificar_login_usuario(email, password)
 
     if usuario:
         if usuario.activo:

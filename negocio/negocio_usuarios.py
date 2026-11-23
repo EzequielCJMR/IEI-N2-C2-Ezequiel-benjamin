@@ -1,6 +1,15 @@
 from datos.modelos.usuario import Usuario
 
-from datos.repositorio.repo_usuarios import guardar_usuario, listado_usuarios, buscar_usuario_email, buscar_usuario_rut
+from datos.repositorio.repo_usuarios import (
+    guardar_usuario,
+    listado_usuarios,
+    buscar_usuario_email,
+    buscar_usuario_rut,
+    obtener_usuario_id,
+    modificar_usuario_bd,
+    eliminar_usuario_bd,
+    verificar_usuario,
+)
 
 def procesar_listado_usuarios():
     return listado_usuarios()
@@ -41,8 +50,25 @@ def modificar_objeto_usuario(user: Usuario, nuevo_nombre, nuevo_email, nueva_con
         if nuevo_rol:
             user.rol = nuevo_rol
             
-        user.save() # Guardamos los cambios
-        return True
+        return modificar_usuario_bd(
+            user,
+            nombre=user.nombre,
+            email=user.email,
+            contrasena=user.contrasena,
+            rol=user.rol,
+        )
     except Exception as e:
         print(f"Error al modificar objeto: {e}")
         return False
+
+def obtener_usuario_por_id(id_usuario):
+    return obtener_usuario_id(id_usuario)
+
+def desactivar_usuario(user: Usuario):
+    return eliminar_usuario_bd(user)
+
+def verificar_login_usuario(email, contrasena):
+    return verificar_usuario(email, contrasena)
+
+def usuario_por_correo(correo):
+    return buscar_usuario_email(correo)

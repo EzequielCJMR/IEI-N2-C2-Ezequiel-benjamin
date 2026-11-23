@@ -5,15 +5,15 @@
 -- =====================================================
 
 -- 1. USUARIOS (ids 1-2 administradores, ids 3-7 encuestados)
--- Las contraseñas son texto de ejemplo: en tu app real guarda hashes (bcrypt/argon2).
+-- Contraseñas protegidas con hashes Bcrypt: ContraseñaSegura!1, !2, etc.
 INSERT INTO Usuario (rut, nombre, email, contrasena, rol) VALUES
-('11.111.111-1', 'Camila Rojas',     'camila.rojas@ejemplo.cl',     'hash_ejemplo_1', 'Administrador'),
-('22.222.222-2', 'Felipe Soto',      'felipe.soto@ejemplo.cl',      'hash_ejemplo_2', 'Administrador'),
-('33.333.333-3', 'Valentina Muñoz',  'valentina.munoz@ejemplo.cl',  'hash_ejemplo_3', 'Encuestado'),
-('44.444.444-4', 'Matías González',  'matias.gonzalez@ejemplo.cl',  'hash_ejemplo_4', 'Encuestado'),
-('55.555.555-5', 'Javiera Pérez',    'javiera.perez@ejemplo.cl',    'hash_ejemplo_5', 'Encuestado'),
-('66.666.666-6', 'Diego Fuentes',    'diego.fuentes@ejemplo.cl',    'hash_ejemplo_6', 'Encuestado'),
-('77.777.777-7', 'Constanza Vega',   'constanza.vega@ejemplo.cl',   'hash_ejemplo_7', 'Encuestado');
+('11.111.111-1', 'Camila Rojas', 'camila1@gmail.com', '$2b$12$hyTk8c1dgpZvuFmWHgWX0uCzEELt1uuee0k2NPbc65FaKYowEx4km', 'Administrador'),
+('22.222.222-2', 'Felipe Soto', 'felipe2@gmail.com', '$2b$12$VbMB.hrlvqYf.HZQULfMO.S6XxerofgtZ/UMpr1qmgjTkKR5Xt0eW', 'Administrador'),
+('33.333.333-3', 'Valentina Muñoz', 'valentina3@gmail.com', '$2b$12$OpkH78udLSUReckqa2GM2uvKO0TBwbrgeUg3FBNveYonrAeRhzYCa', 'Encuestado'),
+('44.444.444-4', 'Matías González', 'matias4@gmail.com', '$2b$12$0bfKFDNQpTc4Mbik7MJuH.hFms1gu0xJGO9MAlC8NXfyhAnI5L0qa', 'Encuestado'),
+('55.555.555-5', 'Javiera Pérez', 'javiera5@gmail.com', '$2b$12$2WysLWnPY.HT3rp21s.6lODZ9MMdyZlwdtI46qTf.8i2jwyCiAL.S', 'Encuestado'),
+('66.666.666-6', 'Diego Fuentes', 'diego6@gmail.com', '$2b$12$3EXVSnU7uCMuLCkJSyMVLu/fan/NKKHS2Lu.2vld3Uf.5184j02fm', 'Encuestado'),
+('77.777.777-7', 'Constanza Vega', 'constanza7@gmail.com', '$2b$12$pql3I5sA1r3m6cwQWbGn0.AKTsY4Dg5YtAPi7zKc7TDlxtorbQjKW', 'Encuestado');
 
 INSERT INTO Administrador (id_usuario, cargo, fecha_contratacion) VALUES
 (1, 'Jefa de Estudios',     '2022-03-15'),

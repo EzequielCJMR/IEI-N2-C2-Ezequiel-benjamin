@@ -1,7 +1,13 @@
 from datetime import date
 
-from datos.modelos.Encuesta import Encuesta
-from datos.repositorio.repo_encuesta import listado_encuestas
+from datos.repositorio.repo_encuesta import (
+    listado_encuestas,
+    listado_encuestas_publicadas,
+    obtener_encuesta_id,
+    guardar_encuesta,
+    modificar_encuesta_bd,
+    eliminar_encuesta_bd,
+)
 
 
 ESTADOS_VALIDOS = {"BORRADOR", "PUBLICADA", "CERRADA"}
@@ -9,6 +15,12 @@ ESTADOS_VALIDOS = {"BORRADOR", "PUBLICADA", "CERRADA"}
 
 def procesar_listado_encuestas():
     return listado_encuestas()
+
+def obtener_encuesta_por_id(id_encuesta):
+    return obtener_encuesta_id(id_encuesta)
+
+def procesar_listado_encuestas_publicadas():
+    return listado_encuestas_publicadas()
 
 
 def crear_encuesta(titulo, descripcion, fecha_expiracion, estado, id_admin, id_categoria):
@@ -24,13 +36,13 @@ def crear_encuesta(titulo, descripcion, fecha_expiracion, estado, id_admin, id_c
         return False
 
     try:
-        Encuesta.create(
-            titulo=titulo,
-            descripcion=descripcion.strip() or None,
-            fecha_expiracion=fecha_expiracion,
-            estado=estado,
-            id_admin=id_admin,
-            id_categoria=id_categoria or None,
+        guardar_encuesta(
+            titulo,
+            descripcion.strip() or None,
+            fecha_expiracion,
+            estado,
+            id_admin,
+            id_categoria or None,
         )
         return True
     except Exception as error:
@@ -58,8 +70,14 @@ def modificar_encuesta(encuesta, titulo, descripcion, fecha_expiracion, estado, 
         encuesta.id_categoria = id_categoria
 
     try:
-        encuesta.save()
-        return True
+        return modificar_encuesta_bd(
+            encuesta,
+            titulo,
+            descripcion,
+            fecha_expiracion,
+            estado,
+            id_categoria,
+        ) is not None
     except Exception as error:
         print(f"Error al modificar encuesta: {error}")
         return False
@@ -67,8 +85,7 @@ def modificar_encuesta(encuesta, titulo, descripcion, fecha_expiracion, estado, 
 
 def eliminar_encuesta(encuesta):
     try:
-        encuesta.delete_instance()
-        return True
+        return eliminar_encuesta_bd(encuesta)
     except Exception as error:
         print(f"Error al eliminar encuesta: {error}")
         return False

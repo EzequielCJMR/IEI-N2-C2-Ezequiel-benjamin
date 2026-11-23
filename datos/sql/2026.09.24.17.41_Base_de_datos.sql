@@ -1,9 +1,13 @@
 
--- 1. Crear el usuario local con tu contraseña
-CREATE USER 'ezequielmr'@'localhost' IDENTIFIED BY 'clave123';
+-- CAMBIO: crear la base antes de seleccionar el esquema.
+CREATE DATABASE IF NOT EXISTS encuestapru CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE encuestapru;
+
+-- Crear el usuario local con una contraseña definida por el desarrollador.
+CREATE USER IF NOT EXISTS 'ezequielmr'@'localhost' IDENTIFIED BY 'clave123';
 
 -- 2. Conceder privilegios SOLO para tu base de datos 'encuestapru'
-GRANT ALL PRIVILEGES ON encuestapru.* TO 'ezequielmr'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON encuestapru.* TO 'ezequielmr'@'localhost';
 
 -- 3. Aplicar los cambios de privilegios
 FLUSH PRIVILEGES;
@@ -15,7 +19,7 @@ CREATE TABLE Usuario (
   rut VARCHAR(20) UNIQUE NOT NULL,
   nombre VARCHAR(50) NOT NULL,
   email VARCHAR(100) UNIQUE NOT NULL,
-  contrasena VARCHAR(100) NOT NULL,
+  contrasena VARCHAR(255) NOT NULL,
   fecha_registro DATE DEFAULT (CURRENT_DATE),
   activo BOOLEAN DEFAULT TRUE,
   rol ENUM('Administrador', 'Encuestado') NOT NULL
@@ -24,7 +28,7 @@ CREATE TABLE Usuario (
 -- 2. TABLA ADMINISTRADOR
 CREATE TABLE Administrador (
   id_administrador INT AUTO_INCREMENT PRIMARY KEY,
-  id_usuario INT NOT NULL,
+  id_usuario INT NOT NULL UNIQUE,
   cargo VARCHAR(50) NOT NULL,
   fecha_contratacion DATE NOT NULL,
   FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario) ON DELETE CASCADE

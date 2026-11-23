@@ -1,9 +1,9 @@
-from datos.repositorio.repo_categoria import obtener_categoria_id
 from negocio.negocio_categoria import (
     procesar_listado_categorias,
     crear_categoria,
     modificar_categoria,
     eliminar_categoria,
+    obtener_categoria_por_id,
 )
 
 
@@ -36,7 +36,7 @@ def modificar_categoria_presentacion():
         print("Error: El ID debe ser numérico.")
         return
 
-    categoria = obtener_categoria_id(id_categoria)
+    categoria = obtener_categoria_por_id(id_categoria)
     if not categoria:
         print("No existe una categoría con ese ID.")
         return
@@ -56,7 +56,7 @@ def eliminar_categoria_presentacion():
         print("Error: El ID debe ser numérico.")
         return
 
-    categoria = obtener_categoria_id(id_categoria)
+    categoria = obtener_categoria_por_id(id_categoria)
     if not categoria:
         print("No existe una categoría con ese ID.")
         return

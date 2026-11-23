@@ -1,9 +1,18 @@
-from datos.modelos.categoria import Categoria
-from datos.repositorio.repo_categoria import obtener_categoria_nombre
+from datos.repositorio.repo_categoria import (
+    listado_categorias,
+    obtener_categoria_id,
+    obtener_categoria_nombre,
+    guardar_categoria,
+    modificar_categoria_bd,
+    eliminar_categoria_bd,
+)
 
 
 def procesar_listado_categorias():
-    return Categoria.select().order_by(Categoria.nombre)
+    return listado_categorias()
+
+def obtener_categoria_por_id(id_categoria):
+    return obtener_categoria_id(id_categoria)
 
 
 def crear_categoria(nombre, descripcion):
@@ -18,8 +27,7 @@ def crear_categoria(nombre, descripcion):
         return False
 
     try:
-        Categoria.create(nombre=nombre, descripcion=descripcion or None)
-        return True
+        return guardar_categoria(nombre, descripcion or None) is not None
     except Exception as error:
         print(f"Error al crear categoría: {error}")
         return False
@@ -39,8 +47,7 @@ def modificar_categoria(categoria, nombre, descripcion):
         categoria.descripcion = descripcion
 
     try:
-        categoria.save()
-        return True
+        return modificar_categoria_bd(categoria, nombre, descripcion) is not None
     except Exception as error:
         print(f"Error al modificar categoría: {error}")
         return False
@@ -48,8 +55,7 @@ def modificar_categoria(categoria, nombre, descripcion):
 
 def eliminar_categoria(categoria):
     try:
-        categoria.delete_instance()
-        return True
+        return eliminar_categoria_bd(categoria)
     except Exception as error:
         print(f"Error al eliminar categoría: {error}")
         return False

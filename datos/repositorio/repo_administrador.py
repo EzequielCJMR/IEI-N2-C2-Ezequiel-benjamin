@@ -19,6 +19,18 @@ def guardar_administrador(id_usuario, cargo, fecha_obj):
         print(f"\n🚨 ERROR DE MYSQL: {e}\n")
         return False
 
+def modificar_administrador_bd(admin: Administrador, cargo=None, fecha_contratacion=None):
+    try:
+        if cargo:
+            admin.cargo = cargo
+        if fecha_contratacion:
+            admin.fecha_contratacion = fecha_contratacion
+        admin.save()
+        return True
+    except Exception as error:
+        print(f"Error al modificar administrador: {error}")
+        return False
+
 def eliminar_administrador_bd(admin: Administrador):
     try:
         # Buscamos al usuario asociado a este administrador

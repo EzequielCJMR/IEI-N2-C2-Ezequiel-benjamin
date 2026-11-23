@@ -1,14 +1,14 @@
 import bcrypt
 from getpass import getpass
 from datetime import datetime, date
-from datos.modelos.encuestado import Encuestado
-from datos.modelos.usuario import Usuario
 from negocio.negocio_encuestado import (
     crear_encuestado_completo, 
     procesar_listado_encuestados,
-    modificar_encuestado_completo
+    modificar_encuestado_completo,
+    obtener_encuestado_por_id,
+    desactivar_encuestado,
 )
-from datos.repositorio.repo_encuestado import obtener_encuestado_id, eliminar_encuestado_bd
+from negocio.negocio_usuarios import obtener_usuario_por_id
 from auxiliares.validaciones import validar_contrasena, validar_correo, validar_rut
 
 def mostrar_listado_encuestados():
@@ -19,7 +19,7 @@ def mostrar_listado_encuestados():
         return
         
     for enc in encuestados:
-        user = Usuario.get_or_none(Usuario.id_usuario == enc.id_usuario)
+        user = obtener_usuario_por_id(enc.id_usuario)
         nombre_user = user.nombre if user else "Desconocido"
         print(f"ID: {enc.id_usuario} | Nombre: {nombre_user} | Nacimiento: {enc.fecha_nacimiento} | País: {enc.pais}")
     print("------------------------------\n")
@@ -81,12 +81,12 @@ def modificar_encuestado():
     print("\n--- MODIFICAR ENCUESTADO ---")
     id_usuario = input("ID del encuestado a modificar: ").strip()
     
-    encuestado = obtener_encuestado_id(id_usuario)
+    encuestado = obtener_encuestado_por_id(id_usuario)
     if not encuestado:
         print("Error: No existe el encuestado.")
         return
 
-    usuario = Usuario.get_or_none(Usuario.id_usuario == id_usuario)
+    usuario = obtener_usuario_por_id(id_usuario)
     if not usuario:
         print("Error crítico: El encuestado existe, pero su cuenta de usuario fue eliminada.")
         return
@@ -134,10 +134,10 @@ def eliminar_encuestado():
     print("\n--- DESACTIVAR ENCUESTADO ---")
     id_usuario = input("ID del encuestado a desactivar: ").strip()
     
-    encuestado = obtener_encuestado_id(id_usuario)
+    encuestado = obtener_encuestado_por_id(id_usuario)
     if not encuestado:
         print("Error: No existe el encuestado.")
         return
 
-    if eliminar_encuestado_bd(encuestado):
+    if desactivar_encuestado(encuestado):
         print("¡Encuestado desactivado con éxito!")
