@@ -30,9 +30,12 @@ from presentacion.presentacion_encuesta import (
     modificar_encuesta_presentacion, eliminar_encuesta_presentacion
 )
 from datos.conexion import conectar
+from auxiliares import (
+    nombre_app, version_app
+)
 
 
-
+from datos.repositorio.repo_usuarios import verificar_usuario
 
 def mostrar_menu(titulo, opciones):
     print("\n" + "=" * 40)
@@ -43,7 +46,7 @@ def mostrar_menu(titulo, opciones):
     for clave, valor in opciones.items():
         print(f'[{clave}] - {valor}')
 
-# --- SUBMENÚS ---
+# --- SUBMENÚS --
 
 def cargar_menu_administrador():
     while True:
@@ -115,6 +118,7 @@ def cargar_menu_encuesta():
 def cargar_menu():
     while True:
         mostrar_menu(titulo_principal, diccionario_menu_principal)
+   
         opcion = input('Seleccione su opción: ').strip()
         print()
 

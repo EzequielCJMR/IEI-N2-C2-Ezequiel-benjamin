@@ -1,5 +1,5 @@
 import bcrypt
-import maskpass  # <-- IMPORTAMOS MASKPASS
+from getpass import getpass
 from datetime import datetime, date
 from datos.modelos.encuestado import Encuestado
 from datos.modelos.usuario import Usuario
@@ -44,7 +44,8 @@ def ingresar_encuestado():
         print("\nRequisitos Contraseña: 8-15 caracteres, 1 mayúscula, 1 minúscula, 1 número, 1 símbolo (!@#$%&/)")
         
         # ¡AQUÍ USAMOS MASKPASS!
-        contrasena = maskpass.askpass(prompt="Contraseña: ", mask="*") 
+        # CAMBIO: getpass reemplaza maskpass para evitar UnicodeDecodeError.
+        contrasena = getpass("Contraseña: ")
         
         resultado = validar_contrasena(contrasena)
         
@@ -95,7 +96,8 @@ def modificar_encuestado():
     
     print("Nueva Contraseña (dejar vacío para no cambiar):")
     # ¡AQUÍ USAMOS MASKPASS!
-    nueva_contrasena = maskpass.askpass(prompt="Contraseña: ", mask="*")
+    # CAMBIO: getpass reemplaza maskpass al modificar la contraseña.
+    nueva_contrasena = getpass("Contraseña: ")
     
     if nueva_contrasena:
         resultado = validar_contrasena(nueva_contrasena)

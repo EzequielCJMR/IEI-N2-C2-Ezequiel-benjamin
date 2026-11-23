@@ -1,5 +1,5 @@
 import bcrypt
-import maskpass  
+from getpass import getpass
 from datetime import datetime, date
 from datos.modelos.Administrador import Administrador
 from datos.repositorio.repo_administrador import (
@@ -37,7 +37,8 @@ def ingresar_administrador():
         print("\nRequisitos Contraseña: 8-15 caracteres, 1 mayúscula, 1 minúscula, 1 número, 1 símbolo (!@#$%&/)")
         
         # ¡AQUÍ USAMOS MASKPASS!
-        contrasena = maskpass.askpass(prompt="Contraseña: ", mask="*")
+        # CAMBIO: getpass reemplaza maskpass para evitar UnicodeDecodeError.
+        contrasena = getpass("Contraseña: ")
         
         resultado = validar_contrasena(contrasena)
         

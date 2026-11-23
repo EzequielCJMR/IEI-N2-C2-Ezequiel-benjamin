@@ -1,13 +1,16 @@
 import bcrypt
-import maskpass  
+from getpass import getpass
 from datos.modelos.usuario import Usuario
 from negocio.negocio_usuarios import (
     procesar_listado_usuarios, 
     crear_objeto_usuario, 
     modificar_objeto_usuario
 )
-from datos.repositorio.repo_usuarios import obtener_usuario_id, eliminar_usuario_bd
+from datos.repositorio.repo_usuarios import obtener_usuario_id, eliminar_usuario_bd,buscar_usuario_email, verificar_usuario
 from auxiliares.validaciones import validar_contrasena, validar_correo, validar_rut
+
+from auxiliares import (
+    nombre_app, version_app,)
 
 def mostrar_listado_usuarios():
     print("\n--- LISTADO DE USUARIOS ---")
@@ -48,9 +51,10 @@ def ingresar_usuario():
         print("- Entre 8 y 15 caracteres\n- Al menos una mayúscula\n- Al menos una minúscula\n- Al menos un número\n- Al menos un símbolo: !@#$%&/")
         
         # ¡AQUÍ USAMOS MASKPASS!
-        contrasena = maskpass.askpass(prompt="Contraseña: ", mask="*") 
+        # CAMBIO: getpass reemplaza maskpass para evitar UnicodeDecodeError.
+        contrasena = getpass("Contraseña: ")
         
-        # Validamos (maskpass devuelve texto, así que no hay problema)
+        # CAMBIO: se valida el texto obtenido antes de generar el hash.
         resultado = validar_contrasena(contrasena)
         
         if len(resultado) > 0:
@@ -83,7 +87,8 @@ def modificar_usuario():
     
     print(f"Nueva Contraseña (dejar vacío para no cambiar):")
     # ¡AQUÍ TAMBIÉN USAMOS MASKPASS!
-    contrasena_nueva = maskpass.askpass(prompt="Contraseña: ", mask="*")
+    # CAMBIO: getpass reemplaza maskpass al modificar la contraseña.
+    contrasena_nueva = getpass("Contraseña: ")
     
     if contrasena_nueva:
         resultado = validar_contrasena(contrasena_nueva)
@@ -122,3 +127,22 @@ def eliminar_usuario():
 
     if eliminar_usuario_bd(user):
         print("¡Usuario desactivado con éxito!")
+
+
+def login():
+    print("\n--- LOGIN DE USUARIO ---")
+    print(f" Bienvenido a {nombre_app} - version {version_app}")
+    email = input("Email: ").strip()
+    # CAMBIO: getpass mantiene la contraseña oculta y admite caracteres Unicode.
+    password = getpass("Contraseña: ")
+
+    usuario = verificar_usuario(email, password)
+
+    if usuario:
+        if usuario.activo:
+            print(f"¡Bienvenido {usuario.nombre}! Rol: {usuario.rol}")
+            return True
+        else:
+            print("Error: Este usuario está desactivado.")
+    else:
+        print("Error: Email o contraseña incorrectos.")
