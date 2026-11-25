@@ -36,8 +36,6 @@ def ingresar_administrador():
     while contrasena == '':
         print("\nRequisitos Contraseña: 8-15 caracteres, 1 mayúscula, 1 minúscula, 1 número, 1 símbolo (!@#$%&/)")
         
-        # ¡AQUÍ USAMOS MASKPASS!
-        # CAMBIO: getpass reemplaza maskpass para evitar UnicodeDecodeError.
         contrasena = getpass("Contraseña: ")
         
         resultado = validar_contrasena(contrasena)

@@ -28,10 +28,8 @@ def modificar_encuestado_bd(encuestado: Encuestado, fecha_nacimiento=None, gener
 
 def eliminar_encuestado_bd(encuestado: Encuestado):
     try:
-        # Buscamos al usuario asociado a este encuestado
         usuario = Usuario.get_or_none(Usuario.id_usuario == encuestado.id_usuario)
         
-        # Si existe, lo desactivamos en lugar de borrarlo
         if usuario:
             usuario.activo = False
             usuario.save()

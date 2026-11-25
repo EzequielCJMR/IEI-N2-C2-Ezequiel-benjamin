@@ -1,6 +1,7 @@
 # Diagrama de clases
 
 ```mermaid
+
 classDiagram
     class Usuario {
         +id_usuario
@@ -11,6 +12,11 @@ classDiagram
         +rol
         +activo
         +fecha_registro
+
+        +iniciarSesion(email: string, contrasena: string) bool
+        +cerrarSesion() void
+        +actualizarPerfil(usuario: Usuario) bool
+        +obtenerPermisos() list
     }
 
     class Administrador {
@@ -18,6 +24,12 @@ classDiagram
         +id_usuario
         +cargo
         +fecha_contratacion
+
+        +crearEncuesta(encuesta: Encuesta) bool
+        +cerrarEncuesta(encuesta: Encuesta) bool
+        +eliminarEncuesta(encuesta: Encuesta) bool
+        +verEstadisticas(encuesta: Encuesta) Reporte
+        +obtenerPermisos() list
     }
 
     class Encuestado {
@@ -26,12 +38,19 @@ classDiagram
         +genero
         +ocupacion
         +pais
+
+        +responderEncuesta(encuesta: Encuesta, respuestas: list) bool
+        +verHistorialRespuestas() list
+        +obtenerPermisos() list
     }
 
     class Categoria {
         +id_categoria
         +nombre
         +descripcion
+
+        +crearCategoria(categoria: Categoria) bool
+        +listarEncuestasPorCategoria() list
     }
 
     class Encuesta {
@@ -43,6 +62,13 @@ classDiagram
         +fecha_expiracion
         +id_admin
         +id_categoria
+
+        +agregarPregunta(pregunta: Pregunta) bool
+        +eliminarPregunta(pregunta: Pregunta) bool
+        +publicar() bool
+        +cerrar() bool
+        +estaVigente() bool
+        +obtenerResultados() Reporte
     }
 
     class Pregunta {
@@ -52,6 +78,32 @@ classDiagram
         +tipo
         +orden
         +obligatoria
+
+        +validarRespuesta(valor: string) bool
+        +calcularResultado() Reporte
+    }
+
+    class PreguntaAbierta {
+        +max_caracteres
+
+        +validarRespuesta(valor: string) bool
+        +calcularResultado() Reporte
+    }
+
+    class PreguntaEscala {
+        +escala_min
+        +escala_max
+
+        +validarRespuesta(valor: string) bool
+        +calcularResultado() Reporte
+    }
+
+    class PreguntaMultiple {
+        +permite_multiples
+
+        +agregarOpcion(opcion: Opcion) bool
+        +validarRespuesta(valor: string) bool
+        +calcularResultado() Reporte
     }
 
     class Opcion {
@@ -59,6 +111,9 @@ classDiagram
         +id_pregunta
         +texto
         +contador_votos
+
+        +incrementarContador() void
+        +obtenerPorcentaje(total: int) float
     }
 
     class Participacionencuesta {
@@ -67,6 +122,10 @@ classDiagram
         +id_encuestado
         +fecha_participacion
         +completada
+
+        +iniciarParticipacion() bool
+        +finalizarParticipacion() bool
+        +listarRespuestas() list
     }
 
     class Respuesta {
@@ -75,6 +134,9 @@ classDiagram
         +id_pregunta
         +valor
         +fecha_respuesta
+
+        +registrarRespuesta() bool
+        +obtenerValor() string
     }
 
     class Reporte {
@@ -83,6 +145,9 @@ classDiagram
         +fecha_generacion
         +total_participantes
         +total_respuestas
+        
+        +generarReporte(encuesta: Encuesta) void
+        +exportarPDF() void
     }
 
     Usuario "1" --> "0..1" Administrador : id_usuario
@@ -96,4 +161,7 @@ classDiagram
     Participacionencuesta "1" --> "*" Respuesta : id_participacion
     Pregunta "1" --> "*" Respuesta : id_pregunta
     Encuesta "1" --> "*" Reporte : id_encuesta
-```
+
+    Pregunta <|-- PreguntaAbierta
+    Pregunta <|-- PreguntaEscala
+    Pregunta <|-- PreguntaMultiple

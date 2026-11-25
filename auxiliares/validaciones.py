@@ -26,7 +26,6 @@ def validar_contrasena(contrasena):
 
 
 def validar_correo(correo):
-    # Patrón para validar que sea un correo electrónico real (ej: algo@dominio.com)
     patron_correo = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
     if re.match(patron_correo, correo):
         return correo
@@ -36,11 +35,9 @@ def validar_correo(correo):
 
 
 def validar_fecha_nacimiento(fecha_nacimiento):
-    # Patrón para validar formato dd/mm/aaaa
     patron_fecha = r"^\b(0[1-9]|[12]\d|3[01])[/](0[1-9]|1[0-2])[/](19\d\d|20\d\d)\b$"
     if re.match(patron_fecha, fecha_nacimiento):
         try:
-            # Convierte el texto a un objeto de fecha de Python
             fecha = datetime.strptime(fecha_nacimiento, "%d/%m/%Y")
             return fecha
         except ValueError:
@@ -52,7 +49,6 @@ def validar_fecha_nacimiento(fecha_nacimiento):
 
 
 def validar_genero(genero):
-    # Solo permite las opciones 1, 2 o 3
     if genero in ["1", "2", "3"]:
         return genero
     else:
@@ -61,13 +57,11 @@ def validar_genero(genero):
 
 
 def validar_rut(rut):
-    # 1. Validar el formato primero
     patron_rut = r"^\d{1,3}(?:\.\d{1,3}){2}-[0-9kK]$"
     if not re.match(patron_rut, rut):
         print("RUT Inválido: Debe tener el formato 11.111.111-1")
         return ""
 
-    # 2. Calcular el Dígito Verificador (Módulo 11)
     rut_limpio = rut.replace(".", "").replace("-", "")
     cuerpo = rut_limpio[:-1]
     dv_ingresado = rut_limpio[-1].upper()

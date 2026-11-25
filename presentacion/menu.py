@@ -9,7 +9,6 @@ from auxiliares import (
     menu_encuestado_sesion, diccionario_menu_encuestado_sesion
 )
 
-# Importamos tus CRUDs
 from presentacion.presentacion_adminitradores import (
     mostrar_listado_administradores, ingresar_administrador, 
     modificar_administrador, eliminar_administrador
@@ -31,7 +30,6 @@ from presentacion.presentacion_encuesta import (
     modificar_encuesta_presentacion, eliminar_encuesta_presentacion
 )
 
-# CAMBIO: el menu usa funciones de negocio para mostrar datos segun el rol.
 from negocio.negocio_encuestado import obtener_encuestado_por_id
 from negocio.negocio_encuesta import procesar_listado_encuestas_publicadas
 
@@ -159,7 +157,6 @@ def cargar_menu_encuestado_sesion(usuario):
             case _: print('Opción no válida.')
 
 
-# CAMBIO: el menú recibe el usuario autenticado y aplica permisos por rol.
 def cargar_menu(usuario=None):
     if not usuario:
         print('Debe iniciar sesión.')

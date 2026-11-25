@@ -2,7 +2,6 @@ from datos.modelos.Administrador import Administrador
 from datos.modelos.usuario import Usuario
 
 def listado_administradores():
-    # Le decimos a Peewee explícitamente cómo unir las tablas
     return (Administrador
             .select()
             .join(Usuario, on=(Administrador.id_usuario == Usuario.id_usuario))
@@ -33,10 +32,8 @@ def modificar_administrador_bd(admin: Administrador, cargo=None, fecha_contratac
 
 def eliminar_administrador_bd(admin: Administrador):
     try:
-        # Buscamos al usuario asociado a este administrador
         usuario = Usuario.get_or_none(Usuario.id_usuario == admin.id_usuario)
         
-        # Si existe, lo desactivamos en lugar de borrarlo
         if usuario:
             usuario.activo = False
             usuario.save()

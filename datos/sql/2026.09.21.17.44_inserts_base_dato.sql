@@ -15,6 +15,10 @@ INSERT INTO Usuario (rut, nombre, email, contrasena, rol) VALUES
 ('66.666.666-6', 'Diego Fuentes', 'diego6@gmail.com', '$2b$12$3EXVSnU7uCMuLCkJSyMVLu/fan/NKKHS2Lu.2vld3Uf.5184j02fm', 'Encuestado'),
 ('77.777.777-7', 'Constanza Vega', 'constanza7@gmail.com', '$2b$12$pql3I5sA1r3m6cwQWbGn0.AKTsY4Dg5YtAPi7zKc7TDlxtorbQjKW', 'Encuestado');
 
+-- ejemplo login admin 
+-- usuario: camila1@gmail.com
+-- contraseña: ContraseñaSegura!1
+
 INSERT INTO Administrador (id_usuario, cargo, fecha_contratacion) VALUES
 (1, 'Jefa de Estudios',     '2022-03-15'),
 (2, 'Analista de Datos',    '2023-08-01');

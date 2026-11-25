@@ -43,8 +43,6 @@ def ingresar_encuestado():
     while contrasena == '':
         print("\nRequisitos Contraseña: 8-15 caracteres, 1 mayúscula, 1 minúscula, 1 número, 1 símbolo (!@#$%&/)")
         
-        # ¡AQUÍ USAMOS MASKPASS!
-        # CAMBIO: getpass reemplaza maskpass para evitar UnicodeDecodeError.
         contrasena = getpass("Contraseña: ")
         
         resultado = validar_contrasena(contrasena)
@@ -95,8 +93,6 @@ def modificar_encuestado():
     nuevo_email = input(f"Nuevo Email (actual: {usuario.email}): ").strip()
     
     print("Nueva Contraseña (dejar vacío para no cambiar):")
-    # ¡AQUÍ USAMOS MASKPASS!
-    # CAMBIO: getpass reemplaza maskpass al modificar la contraseña.
     nueva_contrasena = getpass("Contraseña: ")
     
     if nueva_contrasena:

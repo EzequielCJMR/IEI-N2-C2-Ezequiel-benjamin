@@ -1,5 +1,5 @@
 from datos.modelos.Administrador import Administrador
-from datos.modelos.usuario import Usuario  # <-- NUEVA IMPORTACIÓN
+from datos.modelos.usuario import Usuario
 from datos.repositorio.repo_administrador import (
     guardar_administrador,
     listado_administradores,
@@ -59,3 +59,4 @@ def obtener_administrador_por_id(id_usuario):
 
 def desactivar_administrador(admin: Administrador):
     return eliminar_administrador_bd(admin)
+

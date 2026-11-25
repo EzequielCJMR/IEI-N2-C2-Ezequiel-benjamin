@@ -25,32 +25,24 @@ python -m pip install -r requirements.txt
 
 ## Configuración de MySQL
 
-Ejecuta los scripts dentro de `datos/sql/` en este orden:
+Para una instalación nueva, ejecuta los scripts dentro de `datos/sql/` en este
+orden:
 
-1. `2026.09.24.17.41_Base_de_datos.sql`
-2. `2026.09.21.17.44_inserts_base_dato.sql`
-
-Si la base ya existe y sólo faltan las relaciones físicas o la longitud de la
-contraseña, ejecuta primero:
-
-1. `2026.11.23_19.30_ALTER_INTEGRIDAD.sql`
-
-No borres la base ni las tablas existentes. El script de integridad sólo añade
-claves únicas y relaciones `FOREIGN KEY` necesarias.
-
-Para una instalación completamente nueva, usa
-`2026.11.23_19.30_SETUP_COMPLETO.sql`.
-
-Después ejecuta
-`2026.09.21.17.44_inserts_base_dato.sql` para cargar los datos de prueba.
+1. `2026.11.23_19.30_SETUP_COMPLETO.sql` — crea la base `encuestapru`, el
+   usuario de aplicación y las tablas.
+2. `2026.09.21.17.44_inserts_base_dato.sql` — carga los datos de prueba.
 
 Importante:
 
 - Ejecuta los scripts desde MySQL Workbench o phpMyAdmin como usuario con
   permisos administrativos.
+- Ejecuta los inserts una sola vez y sólo si las tablas están vacías. No vuelvas
+  a ejecutar ambos scripts sobre una base que ya contiene los datos de prueba.
 - El usuario de aplicación mantiene `SELECT`, `INSERT`, `UPDATE` y `DELETE`
   únicamente sobre `encuestapru`.
-- Los scripts no contienen borrados globales ni recreaciones destructivas.
+- Si el usuario de aplicación ya existía en el servidor, confirma que su
+  contraseña coincida con la configurada en `.env`; `CREATE USER IF NOT EXISTS`
+  no cambia la contraseña de un usuario existente.
 
 Configura `.env` en la raíz:
 

@@ -35,10 +35,8 @@ def modificar_objeto_usuario(user: Usuario, nuevo_nombre, nuevo_email, nueva_con
             user.nombre = nuevo_nombre
             
         if nuevo_email:
-            # 1. Buscamos al usuario con ese email (o None si no existe)
             usuario_con_ese_email = buscar_usuario_email(nuevo_email)
             
-            # 2. Validamos: Si existe Y NO es el mismo usuario que estamos modificando
             if usuario_con_ese_email and usuario_con_ese_email.id_usuario != user.id_usuario:
                 print("Error: Ese email ya está en uso por otro usuario.")
                 return False

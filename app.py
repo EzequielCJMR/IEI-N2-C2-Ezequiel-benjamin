@@ -6,7 +6,7 @@ from presentacion import cargar_menu
 from negocio import usuario_por_correo
 
 
-# CAMBIO: app.py sigue el mismo patron del proyecto del profesor.
+
 def login_usuario():
     print(f'\n{nombre_app} - {version_app}')
     print(f'{"=" * (len(nombre_app) + len(version_app) + 3)}\n')

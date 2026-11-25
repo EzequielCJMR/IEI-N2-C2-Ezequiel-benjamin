@@ -2,11 +2,9 @@ import bcrypt
 from datos.modelos.usuario import Usuario
 
 def listado_usuarios():
-    # Solo mostramos los usuarios que están activos
     return Usuario.select().where(Usuario.activo == True)
 
 def listado_usuarios_inactivos():
-    # Función extra por si quieres ver los desactivados (como el profe)
     return Usuario.select().where(Usuario.activo == False)
 
 def obtener_usuario_id(id_usuario):
@@ -63,7 +61,6 @@ def modificar_usuario_bd(user: Usuario, nombre=None, email=None, contrasena=None
 
 def eliminar_usuario_bd(user: Usuario):
     try:
-        # En lugar de borrar al usuario y sus dependencias, solo lo desactivamos
         user.activo = False
         user.save()
         return True

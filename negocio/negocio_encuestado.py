@@ -37,10 +37,8 @@ def crear_encuestado_completo(rut, nombre, email, contrasena, fecha_nac_obj, gen
         print(f"🚨 Error al crear: {e}")
         return False
 
-# NUEVA FUNCIÓN PARA MODIFICAR
 def modificar_encuestado_completo(encuestado, nuevo_nombre, nuevo_email, nueva_contrasena, nueva_fecha_obj, nuevo_genero, nueva_ocupacion, nuevo_pais):
     try:
-        # 1. Actualizamos los datos del Usuario
         usuario = Usuario.get_or_none(Usuario.id_usuario == encuestado.id_usuario)
         if usuario:
             if nuevo_nombre:
@@ -51,7 +49,6 @@ def modificar_encuestado_completo(encuestado, nuevo_nombre, nuevo_email, nueva_c
                 usuario.contrasena = nueva_contrasena
             usuario.save()
             
-        # 2. Actualizamos los datos del Encuestado
         if nueva_fecha_obj:
             encuestado.fecha_nacimiento = nueva_fecha_obj
         if nuevo_genero:
