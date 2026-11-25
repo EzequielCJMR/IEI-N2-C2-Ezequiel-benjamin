@@ -1,3 +1,9 @@
+# Integrantes: 
+# Ezequiel Muñoz 
+# Benjamin Carmona
+
+
+
 # Sistema de Encuestas - POO
 
 Aplicación de consola desarrollada con Python, Peewee y MySQL. Gestiona usuarios,
